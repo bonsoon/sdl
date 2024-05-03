@@ -144,7 +144,7 @@ int main(int argc, char **argv)
             }
         }
         if(!pause){
-            xs[i] = (xs[i] + speed * randInt(-3,8)/5) % width;
+            // xs[i] = (xs[i] + speed * randInt(-3,8)/5) % width;
             ys[i] = (ys[i] + speed + randInt(0,10)/5) % height;
         }
 
@@ -162,9 +162,8 @@ int main(int argc, char **argv)
         if(abs(floor[1]-floor[width-1]>2)){
             int a = (floor[1] + floor[width-1])/2; 
             floor[width-1] = a;
-            floor[1] = a;
+            floor[0] = a;
         }
-        floor[0]=floor[1];
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
         // for(int i = 0; i < width; i++){
         // SDL_RenderDrawLine(renderer,i,height,i,height-floor[i]);        
