@@ -27,6 +27,29 @@ static inline int max(const int a, const int b) {
 static const int width = 200;
 static const int height = 200;
 
+// My types
+
+typedef struct Colors
+{
+    int r;
+    int g;
+    int b;
+} Color;
+
+typedef struct Stars
+{
+    int x;
+    int y;
+    int z;
+    Color color;
+} Star;
+
+typedef struct Dirs
+{
+    int x;
+    int y;
+} Dir;
+
 int main(int argc, char **argv)
 {
     // Initialize the random number generator
@@ -40,35 +63,16 @@ int main(int argc, char **argv)
     SDL_SetRenderDrawColor(renderer, randInt(0, 255), randInt(0, 255), randInt(0, 255), 255);
 
     bool running = true;
-    struct Color
-    {
-        int r;
-        int g;
-        int b;
-    };
-    struct Star
-    {
-        int x;
-        int y;
-        int z;
-        struct Color color;
-    };
-
-    struct Dir
-    {
-        int x;
-        int y;
-    };
 
     int num_stars = 150;
-    struct Dir dir;
+    Dir dir;
     dir.x = 2;
     dir.y = 1;
 
     int fly = 1;
     int subpixels = 10;
 
-    struct Star* stars = calloc(num_stars, sizeof(struct Star));
+    Star* stars = calloc(num_stars, sizeof(Star));
 
     for(int i = 0; i < num_stars; i++){
         stars[i].x = randInt(0,width) * subpixels;
@@ -79,28 +83,28 @@ int main(int argc, char **argv)
         stars[i].color.b = randInt(0,255);
     }
     IMG_Init(IMG_INIT_PNG);
+    
     // SDL_Surface * background;
-    // background = IMG_Load("bg.png");
-    SDL_Texture* texture = NULL;
-    texture = IMG_LoadTexture(renderer, "bg.png");
+    // background = IMG_Load("bg.png"); 
+    // Note to self: What is difference between SDL_Surface and SDL_Texture? 
 
+    SDL_Texture* texture = NULL;
+        texture = IMG_LoadTexture(renderer, "bg.png");
+
+    // spaceship texture
     SDL_Texture* ship = NULL;
-    ship = IMG_LoadTexture(renderer,"ship.png");
-    // SDL_Rect srcrect;
-    SDL_Rect dstrect;
-    // srcrect.x = 0;
-    // srcrect.y = 0;
-    // srcrect.w = 32;
-    // srcrect.h = 32;
-    dstrect.x = width/2 - 15;
-    dstrect.y = height/2 -15;
-    dstrect.w = 30;
-    dstrect.h = 30;
+        ship = IMG_LoadTexture(renderer,"ship.png");
+    // where to put this texture
+    SDL_Rect ship_dstrect;
+        ship_dstrect.x = width/2 - 15;
+        ship_dstrect.y = height/2 -15;
+        ship_dstrect.w = 30;
+        ship_dstrect.h = 30;
 
     SDL_Event event;
+    
     while (running)
     {
-
         // Process events
         while (SDL_PollEvent(&event))
         {
@@ -152,8 +156,8 @@ int main(int argc, char **argv)
         // Clear screen
         // SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
+        
         // Draw background
-        // SDL_RenderCopyEx(renderer, texture, NULL, NULL, 30, NULL, SDL_FLIP_NONE);
         SDL_RenderCopy(renderer, texture, NULL, NULL);
 
         // Draw stars
@@ -162,10 +166,7 @@ int main(int argc, char **argv)
             // f = 1;
             SDL_SetRenderDrawColor(renderer, stars[i].color.r/f, stars[i].color.g/f, stars[i].color.b/f, 255);
             SDL_RenderDrawPoint(renderer, stars[i].x/subpixels,stars[i].y/subpixels);
-            // SDL_SetRenderDrawColor(renderer, stars[i].color.r/3, stars[i].color.g/3, stars[i].color.b/3, 100);
-            // SDL_RenderDrawPoint(renderer, stars[i].x - 1,stars[i].y);
-            // SDL_SetRenderDrawColor(renderer, stars[i].color.r/6, stars[i].color.g/6, stars[i].color.b/6, 10);
-            // SDL_RenderDrawPoint(renderer, stars[i].x - 2,stars[i].y);
+
             stars[i].x = (subpixels*width + (stars[i].x + fly * dir.x * 10/stars[i].z)) % (subpixels*width);
             stars[i].y = (subpixels*height + (stars[i].y + fly * dir.y * 10/stars[i].z)) % (subpixels*height);
         }
@@ -173,40 +174,7 @@ int main(int argc, char **argv)
         // Draw spaceship
         double angle;
         angle = atan2(-dir.x,dir.y) * 180 / 3.141592654;
-        SDL_RenderCopyEx(renderer, ship, NULL, &dstrect, angle, NULL, SDL_FLIP_NONE);
-
-        // SDL_SetRenderDrawColor(renderer,255,255,255,255);
-        // for(float t = 3.14; t < 3.14 * 2; t+=0.1){
-        //     SDL_RenderDrawLine(renderer, 
-        //     width/2 + 10 * cos(t), 
-        //     height/2 + 5 * sin(t), 
-        //     width/2 + 10 * cos(t+0.1), 
-        //     height/2 + 5 * sin(t+0.1));
-
-        // }
-        // SDL_SetRenderDrawColor(renderer,0,0,0,255);
-        // for(float t = 3.14; t < 3.14 * 2; t+=0.1){
-        //     SDL_RenderDrawLine(renderer, 
-        //     width/2 + 9 * cos(t), 
-        //     height/2 + 4 * sin(t), 
-        //     width/2 + 9 * cos(t+0.1), 
-        //     height/2 + 4 * sin(t+0.1));
-        // }
-        
-        // SDL_SetRenderDrawColor(renderer,255,255,255,255);
-        // SDL_RenderDrawLine(renderer, width/2 - 9, height/2,width/2 +9, height/2 );
-
-        // SDL_Rect r;
-        //     r.x = width/2 - 12;
-        //     r.y = height/2;
-        //     r.w = 2;
-        //     r.h = 2;
-
-        // for(int j = 0 ; j < 6; j++){
-        //     r.x += 3;
-        //     SDL_RenderFillRect(renderer, &r );
-        // }
-
+        SDL_RenderCopyEx(renderer, ship, NULL, &ship_dstrect, angle, NULL, SDL_FLIP_NONE);
 
         // Show what was drawn
         SDL_RenderPresent(renderer);
