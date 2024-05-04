@@ -126,9 +126,7 @@ int main(int argc, char **argv)
                     dir.x /= 2;
                     dir.y /= 2;
                 }
-                else{
-                    printf("%s",key);
-                }
+                printf("%s",key);
             }
         }
 
