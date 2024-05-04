@@ -27,7 +27,9 @@ static inline int max(const int a, const int b) {
 static const int width = 200;
 static const int height = 200;
 
-// My types
+// My types and definitions
+
+#define PI 3.141592654
 
 typedef struct Colors
 {
@@ -65,9 +67,11 @@ int main(int argc, char **argv)
     bool running = true;
 
     int num_stars = 150;
+    int heading = 30;
+    int speed = 15;
     Dir dir;
-    dir.x = 2;
-    dir.y = 1;
+    dir.x = speed * cos(heading * 180/PI);
+    dir.y = speed * sin(heading * 180/PI);
 
     int fly = 1;
     int subpixels = 10;
@@ -83,7 +87,7 @@ int main(int argc, char **argv)
         stars[i].color.b = randInt(0,255);
     }
     IMG_Init(IMG_INIT_PNG);
-    
+
     // SDL_Surface * background;
     // background = IMG_Load("bg.png"); 
     // Note to self: What is difference between SDL_Surface and SDL_Texture? 
@@ -123,22 +127,26 @@ int main(int argc, char **argv)
                 if (strcmp(key, "Up") == 0)
                 {
                     fly = 1;
-                    dir.y += 1;
+                    // dir.y += 1;
+                    speed += 5;
                 }
                 if (strcmp(key, "Down") == 0)
                 {
                     fly = 1;
-                    dir.y -= 1;
+                    // dir.y -= 1;
+                    speed -= 5;
                 }
                 if (strcmp(key, "Left") == 0)
                 {
                     fly = 1;
-                    dir.x += 1;
+                    // dir.x += 1;
+                    heading+=30;
                 }
                 if (strcmp(key, "Right") == 0)
                 {
                     fly = 1;
-                    dir.x -=1;
+                    // dir.x -=1;
+                    heading-=30;
                 }
                 if (strcmp(key, "Space") == 0)
                 {
@@ -146,13 +154,14 @@ int main(int argc, char **argv)
                 }
                 if (strcmp(key, "Backspace") == 0)
                 {
-                    dir.x /= 2;
-                    dir.y /= 2;
+                    speed /= 2;
                 }
                 printf("%s",key);
             }
         }
 
+        dir.x = speed * cos(heading * PI / 180);
+        dir.y = speed * sin(heading * PI / 180);
         // Clear screen
         // SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
@@ -173,7 +182,7 @@ int main(int argc, char **argv)
 
         // Draw spaceship
         double angle;
-        angle = atan2(-dir.x,dir.y) * 180 / 3.141592654;
+        angle = atan2(-cos(heading * PI / 180),sin(heading * PI / 180)) * 180 / 3.141592654;
         SDL_RenderCopyEx(renderer, ship, NULL, &ship_dstrect, angle, NULL, SDL_FLIP_NONE);
 
         // Show what was drawn
