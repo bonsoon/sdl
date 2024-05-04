@@ -149,36 +149,30 @@ int main(int argc, char **argv)
 
         // Draw spaceship
         SDL_SetRenderDrawColor(renderer,255,255,255,255);
-        for(float t = 0; t < 3.14 * 2; t+=0.1){
+        for(float t = 3.14; t < 3.14 * 2; t+=0.1){
             SDL_RenderDrawLine(renderer, 
             width/2 + 10 * cos(t), 
             height/2 + 5 * sin(t), 
             width/2 + 10 * cos(t+0.1), 
             height/2 + 5 * sin(t+0.1));
-            SDL_RenderDrawLine(renderer,
-            width/2,
-            height/2,
-            width/2 + 10 * cos(t), 
-            height/2 + 5 * sin(t));
+
         }
         SDL_SetRenderDrawColor(renderer,0,0,0,255);
-        for(float t = 0; t < 3.14 * 2; t+=0.1){
+        for(float t = 3.14; t < 3.14 * 2; t+=0.1){
             SDL_RenderDrawLine(renderer, 
             width/2 + 9 * cos(t), 
             height/2 + 4 * sin(t), 
             width/2 + 9 * cos(t+0.1), 
             height/2 + 4 * sin(t+0.1));
-            SDL_RenderDrawLine(renderer,
-            width/2,
-            height/2,
-            width/2 + 9 * cos(t), 
-            height/2 + 4 * sin(t));
         }
+
+
         SDL_SetRenderDrawColor(renderer,255,255,255,255);
+        SDL_RenderDrawLine(renderer, width/2 - 9, height/2,width/2 +9, height/2 );
         // SDL_RenderDrawLine(renderer, width/2 - 5, height/2- 2,width/2 + 5, height/2-2);
         // SDL_RenderDrawLine(renderer, width/2 - 5, height/2+ 1,width/2 + 5, height/2+1);
-        SDL_RenderDrawLine(renderer, width/2 - 4, height/2- 4,width/2 - 4, height/2+3);
-        SDL_RenderDrawLine(renderer, width/2 + 4, height/2- 4,width/2 + 4, height/2+3);
+        // SDL_RenderDrawLine(renderer, width/2 - 4, height/2- 4,width/2 - 4, height/2+3);
+        // SDL_RenderDrawLine(renderer, width/2 + 4, height/2- 4,width/2 + 4, height/2+3);
 
         // Show what was drawn
         SDL_RenderPresent(renderer);
