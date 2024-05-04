@@ -66,14 +66,14 @@ int main(int argc, char **argv)
     dir.y = 0;
 
     int fly = 1;
-    
+    int subpixels = 10;
 
     struct Star* stars = calloc(num_stars, sizeof(struct Star));
 
     for(int i = 0; i < num_stars; i++){
-        stars[i].x = randInt(0,width);
-        stars[i].y = randInt(0,height);
-        stars[i].z = randInt(1,10);
+        stars[i].x = randInt(0,width) * subpixels;
+        stars[i].y = randInt(0,height) * subpixels;
+        stars[i].z = randInt(1,10) * 10;
         stars[i].color.r = randInt(0,255);
         stars[i].color.g = randInt(0,255);
         stars[i].color.b = randInt(0,255);
@@ -137,13 +137,13 @@ int main(int argc, char **argv)
         // Draw stars
         for(int i = 0; i < num_stars; i++){
             SDL_SetRenderDrawColor(renderer, stars[i].color.r, stars[i].color.g, stars[i].color.b, 255);
-            SDL_RenderDrawPoint(renderer, stars[i].x,stars[i].y);
+            SDL_RenderDrawPoint(renderer, stars[i].x/subpixels,stars[i].y/subpixels);
             // SDL_SetRenderDrawColor(renderer, stars[i].color.r/3, stars[i].color.g/3, stars[i].color.b/3, 100);
             // SDL_RenderDrawPoint(renderer, stars[i].x - 1,stars[i].y);
             // SDL_SetRenderDrawColor(renderer, stars[i].color.r/6, stars[i].color.g/6, stars[i].color.b/6, 10);
             // SDL_RenderDrawPoint(renderer, stars[i].x - 2,stars[i].y);
-            stars[i].x = (width + stars[i].x + fly * dir.x * 10/stars[i].z) % width;
-            stars[i].y = (height + stars[i].y + fly * dir.y * 10/stars[i].z) % height;
+            stars[i].x = (subpixels*width + (stars[i].x + fly * dir.x * 10/stars[i].z)) % (subpixels*width);
+            stars[i].y = (subpixels*height + (stars[i].y + fly * dir.y * 10/stars[i].z)) % (subpixels*height);
         }
 
         // Draw spaceship
