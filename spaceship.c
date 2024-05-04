@@ -4,8 +4,8 @@
 #include <time.h>
 #include <string.h>
 #include <math.h>
-
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 
 #ifdef __TINYC__
 #undef main
@@ -78,10 +78,16 @@ int main(int argc, char **argv)
         stars[i].color.g = randInt(0,255);
         stars[i].color.b = randInt(0,255);
     }
+    IMG_Init(IMG_INIT_PNG);
+    // SDL_Surface * background;
+    // background = IMG_Load("bg.png");
+    SDL_Texture *texture = NULL;
+    texture = IMG_LoadTexture(renderer, "bg.png");
 
     SDL_Event event;
     while (running)
     {
+
         // Process events
         while (SDL_PollEvent(&event))
         {
@@ -131,8 +137,9 @@ int main(int argc, char **argv)
         }
 
         // Clear screen
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        // SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
+        SDL_RenderCopy(renderer, texture, NULL, NULL);
 
         // Draw stars
         for(int i = 0; i < num_stars; i++){
