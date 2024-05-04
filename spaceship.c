@@ -62,8 +62,8 @@ int main(int argc, char **argv)
 
     int num_stars = 150;
     struct Dir dir;
-    dir.x = 1;
-    dir.y = 0;
+    dir.x = 2;
+    dir.y = 1;
 
     int fly = 1;
     int subpixels = 10;
