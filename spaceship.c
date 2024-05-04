@@ -52,6 +52,13 @@ typedef struct Dirs
     int y;
 } Dir;
 
+typedef struct Locations
+{
+    int x;
+    int y;
+} Location;
+
+
 int main(int argc, char **argv)
 {
     // Initialize the random number generator
@@ -77,6 +84,9 @@ int main(int argc, char **argv)
     int subpixels = 10;
 
     Star* stars = calloc(num_stars, sizeof(Star));
+    Location loc;
+    loc.x = 0;
+    loc.y = 0;
 
     for(int i = 0; i < num_stars; i++){
         stars[i].x = randInt(0,width) * subpixels;
@@ -140,13 +150,13 @@ int main(int argc, char **argv)
                 {
                     fly = 1;
                     // dir.x += 1;
-                    heading+=30;
+                    heading-=15;
                 }
                 if (strcmp(key, "Right") == 0)
                 {
                     fly = 1;
                     // dir.x -=1;
-                    heading-=30;
+                    heading+=15;
                 }
                 if (strcmp(key, "Space") == 0)
                 {
@@ -162,6 +172,8 @@ int main(int argc, char **argv)
 
         dir.x = speed * cos(heading * PI / 180);
         dir.y = speed * sin(heading * PI / 180);
+        loc.x += dir.x;
+        loc.y += dir.y;
         // Clear screen
         // SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
@@ -180,10 +192,16 @@ int main(int argc, char **argv)
             stars[i].y = (subpixels*height + (stars[i].y + fly * dir.y * 10/stars[i].z)) % (subpixels*height);
         }
 
+        
+
         // Draw spaceship
         double angle;
         angle = atan2(-cos(heading * PI / 180),sin(heading * PI / 180)) * 180 / 3.141592654;
         SDL_RenderCopyEx(renderer, ship, NULL, &ship_dstrect, angle, NULL, SDL_FLIP_NONE);
+
+        // Draw orbit
+        // ellipse(100+loc.x,150+loc.y,1000,1500,renderer);
+        
 
         // Show what was drawn
         SDL_RenderPresent(renderer);
@@ -196,4 +214,32 @@ int main(int argc, char **argv)
     SDL_Quit();
 
     return 0;
+};
+
+ellipse(int x, int y, int w, int h, SDL_Renderer * renderer){
+    SDL_SetRenderDrawColor(renderer, 150,100,150,255);
+    for(float t = 0 ; t < 360 ; t+=10){
+        SDL_RenderDrawLine(renderer, 
+            x + w * cos(t / 180 * PI), 
+            y + h * sin(t / 180 * PI), 
+            x + w * cos((t+1) / 180 * PI),
+            y + h * sin((t+1) / 180 * PI)
+            );
+    }
 }
+
+/*
+Some solar system data
+Object   Distance to sun in AU
+Sun      0 AU
+Mercury  0.39
+Venus    0.72
+Earth    1.00
+Mars     1.52
+Jupiter  5.20
+Saturn   9.54
+Uranus   19.2
+Neptune  30.1
+Pluto    39.4 
+
+*/
