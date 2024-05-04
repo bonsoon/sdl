@@ -143,7 +143,9 @@ int main(int argc, char **argv)
 
         // Draw stars
         for(int i = 0; i < num_stars; i++){
-            SDL_SetRenderDrawColor(renderer, stars[i].color.r, stars[i].color.g, stars[i].color.b, 255);
+            int f = stars[i].z /30+ 1;
+            // f = 1;
+            SDL_SetRenderDrawColor(renderer, stars[i].color.r/f, stars[i].color.g/f, stars[i].color.b/f, 255);
             SDL_RenderDrawPoint(renderer, stars[i].x/subpixels,stars[i].y/subpixels);
             // SDL_SetRenderDrawColor(renderer, stars[i].color.r/3, stars[i].color.g/3, stars[i].color.b/3, 100);
             // SDL_RenderDrawPoint(renderer, stars[i].x - 1,stars[i].y);
