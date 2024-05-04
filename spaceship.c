@@ -165,14 +165,21 @@ int main(int argc, char **argv)
             width/2 + 9 * cos(t+0.1), 
             height/2 + 4 * sin(t+0.1));
         }
-
-
+        
         SDL_SetRenderDrawColor(renderer,255,255,255,255);
         SDL_RenderDrawLine(renderer, width/2 - 9, height/2,width/2 +9, height/2 );
-        // SDL_RenderDrawLine(renderer, width/2 - 5, height/2- 2,width/2 + 5, height/2-2);
-        // SDL_RenderDrawLine(renderer, width/2 - 5, height/2+ 1,width/2 + 5, height/2+1);
-        // SDL_RenderDrawLine(renderer, width/2 - 4, height/2- 4,width/2 - 4, height/2+3);
-        // SDL_RenderDrawLine(renderer, width/2 + 4, height/2- 4,width/2 + 4, height/2+3);
+
+        SDL_Rect r;
+            r.x = width/2 - 12;
+            r.y = height/2;
+            r.w = 2;
+            r.h = 2;
+
+        for(int j = 0 ; j < 6; j++){
+            r.x += 3;
+            SDL_RenderFillRect(renderer, &r );
+        }
+
 
         // Show what was drawn
         SDL_RenderPresent(renderer);
