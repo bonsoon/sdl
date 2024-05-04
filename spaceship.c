@@ -188,8 +188,8 @@ int main(int argc, char **argv)
             SDL_SetRenderDrawColor(renderer, stars[i].color.r/f, stars[i].color.g/f, stars[i].color.b/f, 255);
             SDL_RenderDrawPoint(renderer, stars[i].x/subpixels,stars[i].y/subpixels);
 
-            stars[i].x = (subpixels*width + (stars[i].x + fly * dir.x * 10/stars[i].z)) % (subpixels*width);
-            stars[i].y = (subpixels*height + (stars[i].y + fly * dir.y * 10/stars[i].z)) % (subpixels*height);
+            stars[i].x = (subpixels*width + (stars[i].x + fly * dir.x * 1/stars[i].z)) % (subpixels*width);
+            stars[i].y = (subpixels*height + (stars[i].y + fly * dir.y * 1/stars[i].z)) % (subpixels*height);
         }
 
         
