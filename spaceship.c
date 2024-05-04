@@ -81,8 +81,21 @@ int main(int argc, char **argv)
     IMG_Init(IMG_INIT_PNG);
     // SDL_Surface * background;
     // background = IMG_Load("bg.png");
-    SDL_Texture *texture = NULL;
+    SDL_Texture* texture = NULL;
     texture = IMG_LoadTexture(renderer, "bg.png");
+
+    SDL_Texture* ship = NULL;
+    ship = IMG_LoadTexture(renderer,"ship.png");
+    // SDL_Rect srcrect;
+    SDL_Rect dstrect;
+    // srcrect.x = 0;
+    // srcrect.y = 0;
+    // srcrect.w = 32;
+    // srcrect.h = 32;
+    dstrect.x = width/2 - 15;
+    dstrect.y = height/2 -15;
+    dstrect.w = 30;
+    dstrect.h = 30;
 
     SDL_Event event;
     while (running)
@@ -139,6 +152,8 @@ int main(int argc, char **argv)
         // Clear screen
         // SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
+        // Draw background
+        // SDL_RenderCopyEx(renderer, texture, NULL, NULL, 30, NULL, SDL_FLIP_NONE);
         SDL_RenderCopy(renderer, texture, NULL, NULL);
 
         // Draw stars
@@ -156,37 +171,41 @@ int main(int argc, char **argv)
         }
 
         // Draw spaceship
-        SDL_SetRenderDrawColor(renderer,255,255,255,255);
-        for(float t = 3.14; t < 3.14 * 2; t+=0.1){
-            SDL_RenderDrawLine(renderer, 
-            width/2 + 10 * cos(t), 
-            height/2 + 5 * sin(t), 
-            width/2 + 10 * cos(t+0.1), 
-            height/2 + 5 * sin(t+0.1));
+        double angle;
+        angle = atan2(-dir.x,dir.y) * 180 / 3.141592654;
+        SDL_RenderCopyEx(renderer, ship, NULL, &dstrect, angle, NULL, SDL_FLIP_NONE);
 
-        }
-        SDL_SetRenderDrawColor(renderer,0,0,0,255);
-        for(float t = 3.14; t < 3.14 * 2; t+=0.1){
-            SDL_RenderDrawLine(renderer, 
-            width/2 + 9 * cos(t), 
-            height/2 + 4 * sin(t), 
-            width/2 + 9 * cos(t+0.1), 
-            height/2 + 4 * sin(t+0.1));
-        }
+        // SDL_SetRenderDrawColor(renderer,255,255,255,255);
+        // for(float t = 3.14; t < 3.14 * 2; t+=0.1){
+        //     SDL_RenderDrawLine(renderer, 
+        //     width/2 + 10 * cos(t), 
+        //     height/2 + 5 * sin(t), 
+        //     width/2 + 10 * cos(t+0.1), 
+        //     height/2 + 5 * sin(t+0.1));
+
+        // }
+        // SDL_SetRenderDrawColor(renderer,0,0,0,255);
+        // for(float t = 3.14; t < 3.14 * 2; t+=0.1){
+        //     SDL_RenderDrawLine(renderer, 
+        //     width/2 + 9 * cos(t), 
+        //     height/2 + 4 * sin(t), 
+        //     width/2 + 9 * cos(t+0.1), 
+        //     height/2 + 4 * sin(t+0.1));
+        // }
         
-        SDL_SetRenderDrawColor(renderer,255,255,255,255);
-        SDL_RenderDrawLine(renderer, width/2 - 9, height/2,width/2 +9, height/2 );
+        // SDL_SetRenderDrawColor(renderer,255,255,255,255);
+        // SDL_RenderDrawLine(renderer, width/2 - 9, height/2,width/2 +9, height/2 );
 
-        SDL_Rect r;
-            r.x = width/2 - 12;
-            r.y = height/2;
-            r.w = 2;
-            r.h = 2;
+        // SDL_Rect r;
+        //     r.x = width/2 - 12;
+        //     r.y = height/2;
+        //     r.w = 2;
+        //     r.h = 2;
 
-        for(int j = 0 ; j < 6; j++){
-            r.x += 3;
-            SDL_RenderFillRect(renderer, &r );
-        }
+        // for(int j = 0 ; j < 6; j++){
+        //     r.x += 3;
+        //     SDL_RenderFillRect(renderer, &r );
+        // }
 
 
         // Show what was drawn
