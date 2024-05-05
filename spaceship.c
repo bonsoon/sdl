@@ -346,7 +346,7 @@ int main(int argc, char **argv)
         strcat(temp, "%");
         write(temp, NULL, 1, NULL, renderer, font);
         strcpy(temp, "Est. distance: ~ ");
-        strcat(temp, ftoa(distance,2).buf);
+        strcat(temp, ftoa(distance,3).buf);
         strcat(temp, " AU");
         write(temp,NULL,2,NULL, renderer,font);
         
