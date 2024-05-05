@@ -285,15 +285,14 @@ int main(int argc, char **argv)
                 heading += 1;
             }
             if(auto_journey){
-                if(abs((planets[auto_target].x + planets[auto_target].w * cos(planets[auto_target].angle* PI / 180) + loc.x )/world_scale- width/2) + abs((planets[auto_target].y + planets[auto_target].h * sin(planets[auto_target].angle* PI / 180) + loc.y)/world_scale - height/2) < 30){
-                    visit_duration += 1;
-                    if(visit_duration > 1000){
-                        auto_target = randInt(0,10);
-                        visit_duration=0;
-                    }
-
+                if(visit_duration > visit_duration_max - 1){
+                    auto_target = randInt(0,10);
+                    visit_duration = 0;
                 }
             }
+        }
+        if(abs((planets[auto_target].x + planets[auto_target].w * cos(planets[auto_target].angle* PI / 180) + loc.x )/world_scale- width/2) + abs((planets[auto_target].y + planets[auto_target].h * sin(planets[auto_target].angle* PI / 180) + loc.y)/world_scale - height/2) < 30 && visit_duration < visit_duration_max){
+            visit_duration += 1;
         }
 
         dir.x = speed * cos(heading * PI / 180);
