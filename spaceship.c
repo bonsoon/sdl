@@ -179,7 +179,7 @@ int main(int argc, char **argv)
 
     int auto_pilot = 0; 
     int auto_target = 3;
-    int auto_journey = 0;
+    int auto_journey = 1;
     int visit_duration = 0;
     SDL_Event event;
 
