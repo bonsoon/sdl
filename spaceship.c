@@ -31,6 +31,7 @@ static const int world_scale = 100;
 // My types and definitions
 
 #define PI 3.141592654
+#define AU 100000
 
 typedef struct Colors
 {
@@ -69,6 +70,7 @@ typedef struct Planets
     float angular_speed;
     SDL_Texture* planet_texture;
     SDL_Rect planet_dstrect;
+    SDL_Rect planet_srcrect;
 } Planet;
 
 Planet draw_planet();
@@ -102,7 +104,7 @@ int main(int argc, char **argv)
 
     Star* stars = calloc(num_stars, sizeof(Star));
     Location loc;
-    loc.x = 0;
+    loc.x = 100000;
     loc.y = 0;
 
     for(int i = 0; i < num_stars; i++){
@@ -132,30 +134,36 @@ int main(int argc, char **argv)
         ship_dstrect.w = 30;
         ship_dstrect.h = 30;
 
-    Planet arrakis;
-        arrakis.x = 105000;
-        arrakis.y = 0;
-        arrakis.w = 100000;
-        arrakis.h =  75000;
-        arrakis.angle = 180;
-        arrakis.angular_speed = -0.001;
-        arrakis.planet_texture = IMG_LoadTexture(renderer, "arrakis.png");
-        arrakis.planet_dstrect.x = width/2 - 15;
-        arrakis.planet_dstrect.y = height/2 -15;
-        arrakis.planet_dstrect.w = 30;
-        arrakis.planet_dstrect.h = 30;
-    Planet ix;
-        ix.x = 75000;
-        ix.y = 1000;
-        ix.w = 60000;
-        ix.h = 45000;
-        ix.angle = 30;
-        ix.angular_speed = 0.005;
-        ix.planet_texture = IMG_LoadTexture(renderer, "ix.png");
-        ix.planet_dstrect.x = width/2 - 15;
-        ix.planet_dstrect.y = height/2 -15;
-        ix.planet_dstrect.w = 30;
-        ix.planet_dstrect.h = 30;
+    Planet sun = {x:0, y:0, w: 0, h: 0, 
+        angle: 0, angular_speed:0};
+    Planet mercury = {x:0, y:0, w:0.39*AU, h: 0.39*AU, 
+        angle: 30, angular_speed:0.005};
+    Planet venus = {x:0, y:0, w:0.72*AU, h: 0.72*AU, 
+        angle: randInt(0,360), angular_speed:0.005};
+    Planet earth = {x:0, y:0, w: AU, h: AU, 
+        angle: 180, angular_speed:-0.001};
+    Planet mars = {x:0, y:0, w: 1.52*AU, h: 1.52*AU, 
+        angle: randInt(0,360), angular_speed:0.0005};
+    Planet jupiter = {x:0, y:0, w:5.20*AU, h: 5.20*AU, 
+        angle: randInt(0,360), angular_speed:0.0005};
+    Planet saturn = {x:0, y:0, w:9.54*AU, h: 9.54*AU, 
+        angle: randInt(0,360), angular_speed:0.0005};
+    Planet uranus = {x:0, y:0, w:19.2*AU, h: 19.2*AU, 
+        angle: randInt(0,360), angular_speed:0.0005};
+    Planet neptune = {x:0, y:0, w:30.1*AU, h: 30.1*AU, 
+        angle: randInt(0,360), angular_speed:0.0005};
+    Planet pluto = {x:0, y:0, w:39.4*AU, h: 39.4*AU, 
+        angle: randInt(0,360), angular_speed:0.000005};
+
+    Planet planets[10] ={sun, mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto};
+    for(int i = 0 ; i < 10; i++){
+        planets[i].planet_texture = IMG_LoadTexture(renderer, "solar_system.png");
+        SDL_Rect dstrect = {x:width/2 - 15, y:height/2 -15, w:30, h:30};
+        planets[i].planet_dstrect = dstrect; 
+        SDL_Rect srcrect = {x:((i * 30) %300), y:((i*30)/300), w:30, h:30};
+        planets[i].planet_srcrect = srcrect;
+    }
+
     SDL_Event event;
     
     while (running)
@@ -234,16 +242,15 @@ int main(int argc, char **argv)
         }
 
         // Draw orbit
-        arrakis = draw_planet(renderer, arrakis, loc);
-        ix = draw_planet(renderer, ix, loc);     
 
+        for(int i = 0 ; i < sizeof(planets)/sizeof(planets[0]); i++){
+            planets[i] = draw_planet(renderer, planets[i],loc);
+        }
 
         // Draw spaceship
         double angle;
         angle = atan2(-cos(heading * PI / 180),sin(heading * PI / 180)) * 180 / 3.141592654;
         SDL_RenderCopyEx(renderer, ship, NULL, &ship_dstrect, angle, NULL, SDL_FLIP_NONE);
-
-
 
         // Show what was drawn
         SDL_RenderPresent(renderer);
@@ -282,7 +289,7 @@ Planet draw_planet(SDL_Renderer * renderer, Planet planet, Location loc)
     planet.planet_dstrect.x = (loc.x + planet.x + planet.w * cos(planet.angle * PI / 180))/world_scale - 15;
     planet.planet_dstrect.y = (loc.y + planet.y + planet.h * sin(planet.angle * PI / 180))/world_scale - 15;
 
-    SDL_RenderCopy(renderer, planet.planet_texture, NULL, &planet.planet_dstrect);
+    SDL_RenderCopy(renderer, planet.planet_texture, &planet.planet_srcrect, &planet.planet_dstrect);
     return planet;
 }
 
