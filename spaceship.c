@@ -62,6 +62,7 @@ typedef struct Locations
 
 typedef struct Planets
 {
+    char* name;
     int x;
     int y;
     int w;
@@ -75,6 +76,8 @@ typedef struct Planets
 
 Planet draw_planet();
 
+// font engine;
+write();
 
 int main(int argc, char **argv)
 {
@@ -134,25 +137,25 @@ int main(int argc, char **argv)
         ship_dstrect.w = 30;
         ship_dstrect.h = 30;
 
-    Planet sun = {x:0, y:0, w: 0, h: 0, 
+    Planet sun = {name: "Sun", x:0, y:0, w: 0, h: 0, 
         angle: 0, angular_speed:0};
-    Planet mercury = {x:0, y:0, w:0.39*AU, h: 0.39*AU, 
+    Planet mercury = {name: "Mercury", x:0, y:0, w:0.39*AU, h: 0.39*AU, 
         angle: 30, angular_speed:0.005};
-    Planet venus = {x:0, y:0, w:0.72*AU, h: 0.72*AU, 
+    Planet venus = {name: "Venus", x:0, y:0, w:0.72*AU, h: 0.72*AU, 
         angle: randInt(0,360), angular_speed:0.005};
-    Planet earth = {x:0, y:0, w: AU, h: AU, 
+    Planet earth = {name: "Earth", x:0, y:0, w: AU, h: AU, 
         angle: 180, angular_speed:-0.001};
-    Planet mars = {x:0, y:0, w: 1.52*AU, h: 1.52*AU, 
+    Planet mars = {name:"Mars", x:0, y:0, w: 1.52*AU, h: 1.52*AU, 
         angle: randInt(0,360), angular_speed:0.0005};
-    Planet jupiter = {x:0, y:0, w:5.20*AU, h: 5.20*AU, 
+    Planet jupiter = {name:"Jupiter", x:0, y:0, w:5.20*AU, h: 5.20*AU, 
         angle: randInt(0,360), angular_speed:0.0005};
-    Planet saturn = {x:0, y:0, w:9.54*AU, h: 9.54*AU, 
+    Planet saturn = {name:"Saturn", x:0, y:0, w:9.54*AU, h: 9.54*AU, 
         angle: randInt(0,360), angular_speed:0.0005};
-    Planet uranus = {x:0, y:0, w:19.2*AU, h: 19.2*AU, 
+    Planet uranus = {name:"Uranus", x:0, y:0, w:19.2*AU, h: 19.2*AU, 
         angle: randInt(0,360), angular_speed:0.0005};
-    Planet neptune = {x:0, y:0, w:30.1*AU, h: 30.1*AU, 
+    Planet neptune = {name:"Neptune", x:0, y:0, w:30.1*AU, h: 30.1*AU, 
         angle: randInt(0,360), angular_speed:0.0005};
-    Planet pluto = {x:0, y:0, w:39.4*AU, h: 39.4*AU, 
+    Planet pluto = {name:"Pluto", x:0, y:0, w:39.4*AU, h: 39.4*AU, 
         angle: randInt(0,360), angular_speed:0.000005};
 
     // Planets tile map
@@ -168,6 +171,10 @@ int main(int argc, char **argv)
         planets[i].planet_srcrect = srcrect;
     }
 
+    // Load font texture
+    SDL_Texture* font;
+        font = IMG_LoadTexture(renderer, "assets/font.png");
+
     // Auto pilot
 
     int auto_pilot = 0; 
@@ -175,7 +182,7 @@ int main(int argc, char **argv)
     int auto_journey = 0;
     int visit_duration = 0;
     SDL_Event event;
-    
+
     while (running)
     {
         // Process events
@@ -259,7 +266,7 @@ int main(int argc, char **argv)
             if(auto_journey){
                 if(abs((planets[auto_target].x + planets[auto_target].w * cos(planets[auto_target].angle* PI / 180) + loc.x )/world_scale- width/2) + abs((planets[auto_target].y + planets[auto_target].h * sin(planets[auto_target].angle* PI / 180) + loc.y)/world_scale - height/2) < 30){
                     visit_duration += 1;
-                    if(visit_duration > 10000){
+                    if(visit_duration > 1000){
                         auto_target = randInt(0,10);
                         visit_duration=0;
                     }
@@ -300,6 +307,12 @@ int main(int argc, char **argv)
         double angle;
         angle = atan2(-cos(heading * PI / 180),sin(heading * PI / 180)) * 180 / 3.141592654;
         SDL_RenderCopyEx(renderer, ship, NULL, &ship_dstrect, angle, NULL, SDL_FLIP_NONE);
+
+        // Draw UI
+
+        char temp[100] = "Destination: ";
+        strcat(temp, planets[auto_target].name);
+        write(temp, NULL, NULL, NULL, renderer, font);
 
         // Show what was drawn
         SDL_RenderPresent(renderer);
@@ -344,6 +357,19 @@ Planet draw_planet(SDL_Renderer * renderer, Planet planet, Location loc)
 
     SDL_RenderCopy(renderer, planet.planet_texture, &planet.planet_srcrect, &planet.planet_dstrect);
     return planet;
+}
+
+write(char * string, int x, int y, int w, SDL_Renderer * renderer, SDL_Texture* font){
+    for(int i = 0 ; i < strlen(string); i++){
+        // printf("%c ", string[i]);
+        int p = string[i]-30 + 200;
+        // printf("%d ", (p % 10) * 6);
+        SDL_Rect srcrect = {x: (p % 10) * 6, y: (p / 10) * 8, w: 6, h: 8};
+        // SDL_Rect dstrect = {x: 6 * p, y: 0, w: 6, h: 8};
+        // SDL_Rect srcrect = {x: 0, y: 0, w: 6, h: 8};
+        SDL_Rect dstrect = {x: 6 * i + 1, y: 0, w: 6, h: 8};
+        SDL_RenderCopy(renderer, font, &srcrect, &dstrect);
+    }
 }
 
 /*
