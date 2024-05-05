@@ -132,7 +132,6 @@ int main(int argc, char **argv)
         ship_dstrect.w = 30;
         ship_dstrect.h = 30;
 
-
     Planet arrakis;
         arrakis.x = 105000;
         arrakis.y = 0;
@@ -145,7 +144,18 @@ int main(int argc, char **argv)
         arrakis.planet_dstrect.y = height/2 -15;
         arrakis.planet_dstrect.w = 30;
         arrakis.planet_dstrect.h = 30;
-
+    Planet ix;
+        ix.x = 75000;
+        ix.y = 1000;
+        ix.w = 60000;
+        ix.h = 45000;
+        ix.angle = 30;
+        ix.angular_speed = 0.005;
+        ix.planet_texture = IMG_LoadTexture(renderer, "ix.png");
+        ix.planet_dstrect.x = width/2 - 15;
+        ix.planet_dstrect.y = height/2 -15;
+        ix.planet_dstrect.w = 30;
+        ix.planet_dstrect.h = 30;
     SDL_Event event;
     
     while (running)
@@ -224,7 +234,9 @@ int main(int argc, char **argv)
         }
 
         // Draw orbit
-        arrakis = draw_planet(renderer, arrakis, loc);        
+        arrakis = draw_planet(renderer, arrakis, loc);
+        ix = draw_planet(renderer, ix, loc);     
+
 
         // Draw spaceship
         double angle;
@@ -248,7 +260,7 @@ int main(int argc, char **argv)
 
 ellipse(int x, int y, int w, int h, SDL_Renderer * renderer)
 {
-    SDL_SetRenderDrawColor(renderer, 150,200,150,255);
+    SDL_SetRenderDrawColor(renderer, 220,220,250,255);
     for(float t = 0 ; t < 360 ; t+=1){
         SDL_RenderDrawLine(renderer, 
             x + w * cos(t / 180 * PI), 
