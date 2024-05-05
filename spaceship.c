@@ -331,6 +331,11 @@ int main(int argc, char **argv)
 
         // Draw UI
 
+        float distance = sqrt(pow((planets[auto_target].x + planets[auto_target].w * cos(planets[auto_target].angle* PI / 180) + loc.x )/world_scale- width/2, 2) + pow((planets[auto_target].y + planets[auto_target].h * sin(planets[auto_target].angle* PI / 180) + loc.y)/world_scale - height/2, 2)) * world_scale / AU;
+
+
+        // printf("%f",distance);
+
         char temp[100] = "Destination: ";
         strcat(temp, planets[auto_target].name);
         write(temp, NULL, 0, NULL, renderer, font);
@@ -340,6 +345,10 @@ int main(int argc, char **argv)
         strcat(temp, ftoa(visted_percent,2).buf);
         strcat(temp, "%");
         write(temp, NULL, 1, NULL, renderer, font);
+        strcpy(temp, "Est. distance: ~ ");
+        strcat(temp, ftoa(distance,2).buf);
+        strcat(temp, " AU");
+        write(temp,NULL,2,NULL, renderer,font);
         
         // Show what was drawn
         SDL_RenderPresent(renderer);
