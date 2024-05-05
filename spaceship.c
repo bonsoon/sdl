@@ -122,11 +122,11 @@ int main(int argc, char **argv)
     // Note to self: What is difference between SDL_Surface and SDL_Texture? 
 
     SDL_Texture* texture = NULL;
-        texture = IMG_LoadTexture(renderer, "bg.png");
+        texture = IMG_LoadTexture(renderer, "assets/bg.png");
 
     // spaceship texture
     SDL_Texture* ship = NULL;
-        ship = IMG_LoadTexture(renderer,"ship.png");
+        ship = IMG_LoadTexture(renderer,"assets/ship.png");
     // where to put this texture
     SDL_Rect ship_dstrect;
         ship_dstrect.x = width/2 - 15;
@@ -157,7 +157,7 @@ int main(int argc, char **argv)
 
     // Planets tile map
     SDL_Texture* planet_textures;
-        planet_textures = IMG_LoadTexture(renderer, "solar_system.png");
+        planet_textures = IMG_LoadTexture(renderer, "assets/solar_system.png");
 
     Planet planets[10] ={sun, mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto};
     for(int i = 0 ; i < sizeof(planets)/sizeof(Planet); i++){
