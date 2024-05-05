@@ -173,7 +173,7 @@ int main(int argc, char **argv)
     int auto_pilot = 0; 
     int auto_target = 3;
     int auto_journey = 0;
-
+    int visit_duration = 0;
     SDL_Event event;
     
     while (running)
@@ -232,6 +232,7 @@ int main(int argc, char **argv)
                 if (strcmp(key, "J") == 0)
                 {
                     auto_journey = 1 - auto_journey;
+                    auto_pilot = auto_journey;
                 }
                 if (strcmp(key, "0")*strcmp(key, "1")*strcmp(key, "2")*strcmp(key, "3")*strcmp(key, "4")*strcmp(key, "5")*strcmp(key, "6")*strcmp(key, "7")*strcmp(key, "8")*strcmp(key, "9") == 0)
                 {
@@ -255,7 +256,12 @@ int main(int argc, char **argv)
             }
             if(auto_journey){
                 if(abs((planets[auto_target].x + planets[auto_target].w * cos(planets[auto_target].angle* PI / 180) + loc.x )/world_scale- width/2) + abs((planets[auto_target].y + planets[auto_target].h * sin(planets[auto_target].angle* PI / 180) + loc.y)/world_scale - height/2) < 1){
-                    auto_target = randInt(0,10);
+                    visit_duration += 1;
+                    if(visit_duration > 1000){
+                        auto_target = randInt(0,10);
+                        visit_duration=0;
+                    }
+
                 }
             }
         }
