@@ -241,6 +241,8 @@ int main(int argc, char **argv)
                 printf("%s",key);
             }
         }
+
+        // Autopilot and autojourney
         if(auto_pilot){
             float orientation;
             orientation = 
@@ -255,9 +257,9 @@ int main(int argc, char **argv)
                 heading += 1;
             }
             if(auto_journey){
-                if(abs((planets[auto_target].x + planets[auto_target].w * cos(planets[auto_target].angle* PI / 180) + loc.x )/world_scale- width/2) + abs((planets[auto_target].y + planets[auto_target].h * sin(planets[auto_target].angle* PI / 180) + loc.y)/world_scale - height/2) < 1){
+                if(abs((planets[auto_target].x + planets[auto_target].w * cos(planets[auto_target].angle* PI / 180) + loc.x )/world_scale- width/2) + abs((planets[auto_target].y + planets[auto_target].h * sin(planets[auto_target].angle* PI / 180) + loc.y)/world_scale - height/2) < 30){
                     visit_duration += 1;
-                    if(visit_duration > 1000){
+                    if(visit_duration > 10000){
                         auto_target = randInt(0,10);
                         visit_duration=0;
                     }
@@ -301,6 +303,9 @@ int main(int argc, char **argv)
 
         // Show what was drawn
         SDL_RenderPresent(renderer);
+
+        // Attempt at at most 50fps
+        SDL_Delay(20);
     }
 
     // Release resources
