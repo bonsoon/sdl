@@ -345,7 +345,7 @@ int main(int argc, char **argv)
         char temp[100] = "Destination: ";
         strcat(temp, planets[auto_target].name);
         write(temp, NULL, 0, NULL, renderer, font);
-        strcpy(temp, "Visted: ");
+        strcpy(temp, "Visited: ");
         // printf("%s",temp);
         float visted_percent = (visit_duration/1.0) / (visit_duration_max/1.0) * 100;
         strcat(temp, ftoa(visted_percent,2).buf);
