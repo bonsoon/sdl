@@ -76,12 +76,32 @@ typedef struct Planets
 
 Planet draw_planet();
 
+typedef struct Stringbufs 
+{
+  char buf[64];
+} Stringbuf;
+
 // font engine;
 write();
+Stringbuf ftoa(float f, int places){
+    int p = pow(10,places);
+    int temp = f * p;
+    temp %= p;
+    int ftemp = f;
+    Stringbuf r;
+    char res[16] ="";
+    itoa(ftemp, r.buf, 10);
+    strcat(res, r.buf);
+    strcat(res, ".");
+    itoa(temp, r.buf, 10);
+    strcat(res, r.buf);
+    strcpy(r.buf, res);
+    // printf("%s", res);
+    return r;
+};
 
 int main(int argc, char **argv)
 {
-
 
     // Initialize the random number generator
     srand(time(NULL));
@@ -181,6 +201,7 @@ int main(int argc, char **argv)
     int auto_target = 3;
     int auto_journey = 1;
     int visit_duration = 0;
+    int visit_duration_max = 1000;
     SDL_Event event;
 
     while (running)
@@ -312,8 +333,14 @@ int main(int argc, char **argv)
 
         char temp[100] = "Destination: ";
         strcat(temp, planets[auto_target].name);
-        write(temp, NULL, NULL, NULL, renderer, font);
-
+        write(temp, NULL, 0, NULL, renderer, font);
+        strcpy(temp, "Visted: ");
+        // printf("%s",temp);
+        float visted_percent = (visit_duration/1.0) / (visit_duration_max/1.0) * 100;
+        strcat(temp, ftoa(visted_percent,2).buf);
+        strcat(temp, "%");
+        write(temp, NULL, 1, NULL, renderer, font);
+        
         // Show what was drawn
         SDL_RenderPresent(renderer);
 
@@ -359,7 +386,7 @@ Planet draw_planet(SDL_Renderer * renderer, Planet planet, Location loc)
     return planet;
 }
 
-write(char * string, int x, int y, int w, SDL_Renderer * renderer, SDL_Texture* font){
+write(char * string, int cx, int cy, int cw, SDL_Renderer * renderer, SDL_Texture* font){
     for(int i = 0 ; i < strlen(string); i++){
         // printf("%c ", string[i]);
         int p = string[i]-30 + 200;
@@ -367,7 +394,7 @@ write(char * string, int x, int y, int w, SDL_Renderer * renderer, SDL_Texture* 
         SDL_Rect srcrect = {x: (p % 10) * 6, y: (p / 10) * 8, w: 6, h: 8};
         // SDL_Rect dstrect = {x: 6 * p, y: 0, w: 6, h: 8};
         // SDL_Rect srcrect = {x: 0, y: 0, w: 6, h: 8};
-        SDL_Rect dstrect = {x: 6 * i + 1, y: 0, w: 6, h: 8};
+        SDL_Rect dstrect = {x: 6 * i + cx * 8, y: cy*8, w: 6, h: 8};
         SDL_RenderCopy(renderer, font, &srcrect, &dstrect);
     }
 }
