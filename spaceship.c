@@ -84,6 +84,7 @@ typedef struct Stringbufs
 // font engine;
 write();
 Stringbuf ftoa(float f, int places){
+
     int p = pow(10,places);
     int temp = f * p;
     temp %= p;
@@ -92,6 +93,9 @@ Stringbuf ftoa(float f, int places){
     char res[16] ="";
     itoa(ftemp, r.buf, 10);
     strcat(res, r.buf);
+    if(places == 0){
+        return r;
+    }
     strcat(res, ".");
     itoa(temp, r.buf, 10);
     while(strlen(r.buf) < places){
@@ -209,7 +213,12 @@ int main(int argc, char **argv)
     int auto_journey = 1;
     int visit_duration = 0;
     int visit_duration_max = 1000;
+    int num_missions_completed = 0;
     SDL_Event event;
+
+    // Windows on top;
+    int window_on_top = 1;
+    SDL_SetWindowAlwaysOnTop(window, 1);
 
     while (running)
     {
@@ -269,6 +278,11 @@ int main(int argc, char **argv)
                     auto_journey = 1 - auto_journey;
                     auto_pilot = auto_journey;
                 }
+                if (strcmp(key, "W") == 0)
+                {
+                    window_on_top = 1 - window_on_top;
+                    SDL_SetWindowAlwaysOnTop(window, window_on_top);
+                }
                 if (strcmp(key, "0")*strcmp(key, "1")*strcmp(key, "2")*strcmp(key, "3")*strcmp(key, "4")*strcmp(key, "5")*strcmp(key, "6")*strcmp(key, "7")*strcmp(key, "8")*strcmp(key, "9") == 0)
                 {
                     auto_target = atoi(key);
@@ -295,6 +309,7 @@ int main(int argc, char **argv)
                 if(visit_duration > visit_duration_max - 1){
                     auto_target = randInt(0,10);
                     visit_duration = 0;
+                    num_missions_completed += 1;
                 }
             }
         }
@@ -345,11 +360,13 @@ int main(int argc, char **argv)
         char temp[100] = "Destination: ";
         strcat(temp, planets[auto_target].name);
         write(temp, NULL, 0, NULL, renderer, font);
-        strcpy(temp, "Visited: ");
+        strcpy(temp, "Mission Stat.: ");
         // printf("%s",temp);
         float visted_percent = (visit_duration/1.0) / (visit_duration_max/1.0) * 100;
         strcat(temp, ftoa(visted_percent,2).buf);
-        strcat(temp, "%");
+        strcat(temp, "% (");
+        strcat(temp, ftoa(num_missions_completed,0).buf);
+        strcat(temp, ")");
         write(temp, NULL, 1, NULL, renderer, font);
         strcpy(temp, "Est. distance: ~ ");
         strcat(temp, ftoa(distance,3).buf);
