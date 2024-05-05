@@ -94,6 +94,13 @@ Stringbuf ftoa(float f, int places){
     strcat(res, r.buf);
     strcat(res, ".");
     itoa(temp, r.buf, 10);
+    while(strlen(r.buf) < places){
+        char temp2[16];
+        strcpy(temp2,"0");
+        strcat(temp2,r.buf);
+        strcpy(r.buf,temp2);
+    }
+
     strcat(res, r.buf);
     strcpy(r.buf, res);
     // printf("%s", res);
