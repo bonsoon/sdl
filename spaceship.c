@@ -168,6 +168,11 @@ int main(int argc, char **argv)
         planets[i].planet_srcrect = srcrect;
     }
 
+    // Auto pilot
+
+    int auto_pilot = 0; 
+    int auto_target = 5;
+
     SDL_Event event;
     
     while (running)
@@ -219,7 +224,29 @@ int main(int argc, char **argv)
                 {
                     speed /= 2;
                 }
+                if (strcmp(key, "A") == 0)
+                {
+                    auto_pilot = 1 - auto_pilot;
+                }
+                if (strcmp(key, "0")*strcmp(key, "1")*strcmp(key, "2")*strcmp(key, "3")*strcmp(key, "4")*strcmp(key, "5")*strcmp(key, "6")*strcmp(key, "7")*strcmp(key, "8")*strcmp(key, "9") == 0)
+                {
+                    auto_target = atoi(key);
+                }
                 printf("%s",key);
+            }
+        }
+        if(auto_pilot){
+            float orientation;
+            orientation = 
+            cos(heading * PI / 180) * 
+                ((planets[auto_target].y + planets[auto_target].h * sin(planets[auto_target].angle* PI / 180) + loc.y)/world_scale - height/2) - 
+            sin(heading * PI / 180) * 
+                ((planets[auto_target].x + planets[auto_target].w * cos(planets[auto_target].angle* PI / 180) + loc.x )/world_scale- width/2);
+            if(orientation > 0){
+                heading -= 1;
+            }
+            if(orientation < 0){
+                heading += 1;
             }
         }
 
@@ -269,6 +296,7 @@ int main(int argc, char **argv)
     return 0;
 };
 
+
 ellipse(int x, int y, int w, int h, SDL_Renderer * renderer)
 {
     SDL_SetRenderDrawColor(renderer, 220,220,250,255);
@@ -290,8 +318,8 @@ Planet draw_planet(SDL_Renderer * renderer, Planet planet, Location loc)
             planet.h/world_scale,
             renderer);
     planet.angle += planet.angular_speed;
-    planet.planet_dstrect.x = (loc.x + planet.x + planet.w * cos(planet.angle * PI / 180))/world_scale - 15;
-    planet.planet_dstrect.y = (loc.y + planet.y + planet.h * sin(planet.angle * PI / 180))/world_scale - 15;
+    planet.planet_dstrect.x = (planet.x + planet.w * cos(planet.angle * PI / 180)+loc.x)/world_scale - 15;
+    planet.planet_dstrect.y = (planet.y + planet.h * sin(planet.angle * PI / 180)+loc.y)/world_scale - 15;
 
     SDL_RenderCopy(renderer, planet.planet_texture, &planet.planet_srcrect, &planet.planet_dstrect);
     return planet;
