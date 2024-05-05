@@ -155,9 +155,13 @@ int main(int argc, char **argv)
     Planet pluto = {x:0, y:0, w:39.4*AU, h: 39.4*AU, 
         angle: randInt(0,360), angular_speed:0.000005};
 
+    // Planets tile map
+    SDL_Texture* planet_textures;
+        planet_textures = IMG_LoadTexture(renderer, "solar_system.png");
+
     Planet planets[10] ={sun, mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto};
-    for(int i = 0 ; i < 10; i++){
-        planets[i].planet_texture = IMG_LoadTexture(renderer, "solar_system.png");
+    for(int i = 0 ; i < sizeof(planets)/sizeof(Planet); i++){
+        planets[i].planet_texture = planet_textures;
         SDL_Rect dstrect = {x:width/2 - 15, y:height/2 -15, w:30, h:30};
         planets[i].planet_dstrect = dstrect; 
         SDL_Rect srcrect = {x:((i * 30) %300), y:((i*30)/300), w:30, h:30};
