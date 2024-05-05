@@ -26,6 +26,7 @@ static inline int max(const int a, const int b) {
 // Window dimensions
 static const int width = 200;
 static const int height = 200;
+static const int world_scale = 100;
 
 // My types and definitions
 
@@ -58,9 +59,25 @@ typedef struct Locations
     int y;
 } Location;
 
+typedef struct Planets
+{
+    int x;
+    int y;
+    int w;
+    int h;
+    float angle;
+    float angular_speed;
+    SDL_Texture* planet_texture;
+    SDL_Rect planet_dstrect;
+} Planet;
+
+Planet draw_planet();
+
 
 int main(int argc, char **argv)
 {
+
+
     // Initialize the random number generator
     srand(time(NULL));
     int scale = 2;
@@ -115,6 +132,20 @@ int main(int argc, char **argv)
         ship_dstrect.w = 30;
         ship_dstrect.h = 30;
 
+
+    Planet arrakis;
+        arrakis.x = 105000;
+        arrakis.y = 0;
+        arrakis.w = 100000;
+        arrakis.h =  75000;
+        arrakis.angle = 180;
+        arrakis.angular_speed = -0.001;
+        arrakis.planet_texture = IMG_LoadTexture(renderer, "arrakis.png");
+        arrakis.planet_dstrect.x = width/2 - 15;
+        arrakis.planet_dstrect.y = height/2 -15;
+        arrakis.planet_dstrect.w = 30;
+        arrakis.planet_dstrect.h = 30;
+
     SDL_Event event;
     
     while (running)
@@ -148,13 +179,13 @@ int main(int argc, char **argv)
                 }
                 if (strcmp(key, "Left") == 0)
                 {
-                    fly = 1;
+                    // fly = 1;
                     // dir.x += 1;
                     heading-=15;
                 }
                 if (strcmp(key, "Right") == 0)
                 {
-                    fly = 1;
+                    // fly = 1;
                     // dir.x -=1;
                     heading+=15;
                 }
@@ -172,8 +203,8 @@ int main(int argc, char **argv)
 
         dir.x = speed * cos(heading * PI / 180);
         dir.y = speed * sin(heading * PI / 180);
-        loc.x += dir.x;
-        loc.y += dir.y;
+        loc.x += dir.x * fly;
+        loc.y += dir.y * fly;
         // Clear screen
         // SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
@@ -192,16 +223,15 @@ int main(int argc, char **argv)
             stars[i].y = (subpixels*height + (stars[i].y + fly * dir.y * 1/stars[i].z)) % (subpixels*height);
         }
 
-        
+        // Draw orbit
+        arrakis = draw_planet(renderer, arrakis, loc);        
 
         // Draw spaceship
         double angle;
         angle = atan2(-cos(heading * PI / 180),sin(heading * PI / 180)) * 180 / 3.141592654;
         SDL_RenderCopyEx(renderer, ship, NULL, &ship_dstrect, angle, NULL, SDL_FLIP_NONE);
 
-        // Draw orbit
-        // ellipse(100+loc.x,150+loc.y,1000,1500,renderer);
-        
+
 
         // Show what was drawn
         SDL_RenderPresent(renderer);
@@ -216,16 +246,32 @@ int main(int argc, char **argv)
     return 0;
 };
 
-ellipse(int x, int y, int w, int h, SDL_Renderer * renderer){
-    SDL_SetRenderDrawColor(renderer, 150,100,150,255);
-    for(float t = 0 ; t < 360 ; t+=10){
+ellipse(int x, int y, int w, int h, SDL_Renderer * renderer)
+{
+    SDL_SetRenderDrawColor(renderer, 150,200,150,255);
+    for(float t = 0 ; t < 360 ; t+=1){
         SDL_RenderDrawLine(renderer, 
             x + w * cos(t / 180 * PI), 
             y + h * sin(t / 180 * PI), 
-            x + w * cos((t+1) / 180 * PI),
-            y + h * sin((t+1) / 180 * PI)
+            x + w * cos((t+0.1) / 180 * PI),
+            y + h * sin((t+0.1) / 180 * PI)
             );
     }
+};
+
+Planet draw_planet(SDL_Renderer * renderer, Planet planet, Location loc)
+{
+    ellipse((planet.x + loc.x)/world_scale, 
+            (planet.y + loc.y)/world_scale, 
+            planet.w/world_scale, 
+            planet.h/world_scale,
+            renderer);
+    planet.angle += planet.angular_speed;
+    planet.planet_dstrect.x = (loc.x + planet.x + planet.w * cos(planet.angle * PI / 180))/world_scale - 15;
+    planet.planet_dstrect.y = (loc.y + planet.y + planet.h * sin(planet.angle * PI / 180))/world_scale - 15;
+
+    SDL_RenderCopy(renderer, planet.planet_texture, NULL, &planet.planet_dstrect);
+    return planet;
 }
 
 /*
