@@ -82,7 +82,7 @@ typedef struct Stringbufs
 } Stringbuf;
 
 // font engine;
-write();
+void write();
 Stringbuf ftoa(float f, int places){
 
     int p = pow(10,places);
@@ -214,12 +214,13 @@ int main(int argc, char **argv)
     int visit_duration = 0;
     int visit_duration_max = 1000;
     int num_missions_completed = 0;
-    SDL_Event event;
 
     // Windows on top;
     int window_on_top = 1;
     SDL_SetWindowAlwaysOnTop(window, 1);
 
+
+    SDL_Event event;
     while (running)
     {
         // Process events
@@ -390,7 +391,7 @@ int main(int argc, char **argv)
 };
 
 
-ellipse(int x, int y, int w, int h, SDL_Renderer * renderer)
+void ellipse(int x, int y, int w, int h, SDL_Renderer * renderer)
 {
     SDL_SetRenderDrawColor(renderer, 220,220,250,255);
     for(float t = 0 ; t < 360 ; t+=1){
@@ -418,7 +419,7 @@ Planet draw_planet(SDL_Renderer * renderer, Planet planet, Location loc)
     return planet;
 }
 
-write(char * string, int cx, int cy, int cw, SDL_Renderer * renderer, SDL_Texture* font){
+void write(char * string, int cx, int cy, int cw, SDL_Renderer * renderer, SDL_Texture* font){
     for(int i = 0 ; i < strlen(string); i++){
         // printf("%c ", string[i]);
         int p = string[i]-30 + 200;
